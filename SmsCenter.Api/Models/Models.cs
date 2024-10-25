@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace SmsCenter.Api.Models;
 
@@ -100,7 +99,7 @@ public static class SmsCenter
             /// Если не указывать, то будет назначен автоматически.
             /// </summary>
             [JsonPropertyName("id")]
-            public string Id { get; set; } = default!;
+            public string? Id { get; set; } = default!;
 
             /// <summary>
             /// Имя отправителя, отображаемое в телефоне получателя.
@@ -108,23 +107,9 @@ public static class SmsCenter
             /// Длина – 11 символов или 15 цифр.
             /// </summary>
             [JsonPropertyName("sender")]
-            public string Sender { get; set; } = default!;
+            public string? Sender { get; set; } = default!;
 
-            /// <summary>
-            /// Признак того, что сообщение необходимо перевести в транслит.
-            /// 0 (по умолчанию) – не переводить в транслит.
-            /// </summary>
-            [JsonPropertyName("translit")]
-            public byte? Translit { get; set; } = null;
-
-            /// <summary>
-            /// Автоматически сокращать ссылки в сообщениях.
-            /// 0 (по умолчанию) – оставить ссылки в тексте сообщения без изменений.
-            /// </summary>
-            [JsonPropertyName("tinyurl")]
-            public string TinyUrl { get; set; } = default!;
-
-            /// <summary>
+           /// <summary>
             /// Время отправки SMS-сообщения абоненту.
             /// Форматы:
             /// DDMMYYhhmm или DD.MM.YY hh:mm.
@@ -162,70 +147,36 @@ public static class SmsCenter
             public byte? Flash { get; set; } = default!;
 
             /// <summary>
-            /// Признак бинарного сообщения.
-            /// </summary>
-            [JsonPropertyName("bin")]
-            public byte? Bin { get; set; } = default!;
-
-            /// <summary>
             /// Признак wap-push сообщения, с помощью которого можно отправить интернет-ссылку на телефон
             /// </summary>
             [JsonPropertyName("push")]
             public byte? Push { get; set; } = default!;
 
             /// <summary>
-            /// Признак MMS-сообщения
+            /// Признак whatsapp-сообщения
             /// </summary>
-            [JsonPropertyName("mms")]
-            public byte? Mms { get; set; } = default!;
+            [JsonPropertyName("whatsapp")]
+            public byte? Whatsapp { get; set; } = default!;
 
             /// <summary>
-            /// Признак e-mail сообщения
+            /// Признак сообщения в telegram
             /// </summary>
-            [JsonPropertyName("mail")]
-            public byte? Mail { get; set; } = default!;
+            [JsonPropertyName("tg")]
+            public byte? Telegram { get; set; } = default!;
 
             /// <summary>
-            /// Признак soc-сообщения, отправляемого пользователям социальных сетей
+            /// Имя бота (telegram), в который необходимо отправить сообщение в формате "@botname_bot"
             /// </summary>
-            [JsonPropertyName("soc")]
-            public byte? Soc { get; set; } = default!;
+            [JsonPropertyName("bot")]
+            public byte? Bot { get; set; } = default!;
 
             /// <summary>
-            /// Признак viber-сообщения
+            /// При указании данного параметра, система не будет отображать текст сообщения,
+            /// отправленного пользователю и выводить предупреждение о необходимости
+            /// подтверждения номера телефона, если с момента последнего подтверждения
+            /// прошло больше smsreq дней. Диапазон значений от 10 до 999.
             /// </summary>
-            [JsonPropertyName("viber")]
-            public byte? Viber { get; set; } = default!;
-
-            /// <summary>
-            /// Полный http-адрес файла для загрузки и передачи в сообщении
-            /// </summary>
-            [JsonPropertyName("fileurl")]
-            public string Fileurl { get; set; } = default!;
-
-            /// <summary>
-            /// Признак голосового сообщения
-            /// </summary>
-            [JsonPropertyName("call")]
-            public byte? Call { get; set; } = default!;
-
-            /// <summary>
-            /// Голос, используемый для озвучивания текста (только для голосовых сообщений)
-            /// </summary>
-            [JsonPropertyName("voice")]
-            public string Voice { get; set; } = default!;
-
-            /// <summary>
-            /// Разделенный запятой список параметров для голосового сообщения в формате "param=w,i,n"
-            /// </summary>
-            [JsonPropertyName("param")]
-            public string Param { get; set; } = default!;
-
-            /// <summary>
-            /// Тема MMS или e-mail сообщения
-            /// </summary>
-            [JsonPropertyName("subj")]
-            public string Subject { get; set; } = default!;
+            [JsonPropertyName("smsreq")] public int SmsReq { get; set; } = default!;
 
             /// <summary>
             /// Признак необходимости получения стоимости рассылки
@@ -923,19 +874,20 @@ public static class SmsCenter
     public sealed record AdditionalOptions
     {
         /// <summary>
-        /// Признак HLR-запроса для получения информации о номере из базы оператора без отправки реального SMS
+        /// Идентификатор сообщения. Назначается Клиентом.
+        /// Служит для дальнейшей идентификации сообщения.
+        /// Если не указывать, то будет назначен автоматически.
         /// </summary>
-        public byte? Hlr { get; init; }
+        [JsonPropertyName("id")]
+        public string? Id { get; set; } = default!;
 
         /// <summary>
-        /// Признак специального SMS, не отображаемого в телефоне,
-        /// для проверки номеров на доступность в реальном времени по статусу доставки
+        /// Имя отправителя, отображаемое в телефоне получателя.
+        /// Разрешены английские буквы, цифры, пробел и некоторые символы.
+        /// Длина – 11 символов или 15 цифр.
         /// </summary>
-        public byte? Ping { get; init; }
-
-        public byte? Cost { get; init; }
-
-        public byte? Op { get; init; }
+        [JsonPropertyName("sender")]
+        public string? Sender { get; set; } = default!;
     }
 
     /// <summary>
