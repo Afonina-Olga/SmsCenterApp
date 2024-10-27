@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Web;
 using Ardalis.GuardClauses;
@@ -18,6 +19,7 @@ internal sealed class SmsCenterProvider(
 {
     private readonly ILogger<SmsCenterProvider> _logger = logger;
     private readonly SmsCenterOptions _options = options.Value;
+
     private static readonly JsonSerializerOptions JsonSerializerOptions = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -31,7 +33,8 @@ internal sealed class SmsCenterProvider(
 
     #region Отправка смс
 
-    public async ValueTask<Sms.Response> SendSms(string phones, string message, AdditionalOptions? options = default)
+    public async ValueTask<Sms.Response> SendSms(string phones, string message,
+        Sms.AdditionalOptions? options = default)
     {
         var request = new Sms.Request(_options.Login, _options.Password)
         {
@@ -48,7 +51,7 @@ internal sealed class SmsCenterProvider(
         return result;
     }
 
-    public async ValueTask<Sms.Response> SendSms(string phoneAndMessageList, AdditionalOptions? options = default)
+    public async ValueTask<Sms.Response> SendSms(string phoneAndMessageList, Sms.AdditionalOptions? options = default)
     {
         var request = new Sms.Request(_options.Login, _options.Password)
         {
@@ -59,12 +62,12 @@ internal sealed class SmsCenterProvider(
             Sender = options?.Sender,
             Id = options?.Id
         };
-        
+
         var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
         return result;
     }
 
-    public async ValueTask<double> GetSmsSendingCost(string phones, string message)
+    public async ValueTask<Sms.CostResponse> GetSmsSendingCost(string phones, string message)
     {
         var request = new Sms.Request(_options.Login, _options.Password)
         {
@@ -74,10 +77,14 @@ internal sealed class SmsCenterProvider(
         };
 
         var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
-        return result.Cost!.Value;
+        return new Sms.CostResponse
+        {
+            Cost = result.Cost,
+            Error = result.Error
+        };
     }
 
-    public async ValueTask<double> GetSmsSendingCost(string phoneAndMessageList)
+    public async ValueTask<Sms.CostResponse> GetSmsSendingCost(string phoneAndMessageList)
     {
         var request = new Sms.Request(_options.Login, _options.Password)
         {
@@ -86,46 +93,145 @@ internal sealed class SmsCenterProvider(
         };
 
         var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
-        return result.Cost!.Value;
+        return new Sms.CostResponse
+        {
+            Cost = result.Cost,
+            Error = result.Error
+        };
+    }
+
+    public async ValueTask<Sms.Response> SendHlr(string phones)
+    {
+        var request = new Sms.Request(_options.Login, _options.Password)
+        {
+            Phones = phones,
+            Cost = 3, // обычная отправка смс, но добавить в ответ стоимость и новый баланс Клиента.
+            Op = 1, // в ответ добавляется список всех номеров телефонов с соответствующими статусами, значениями mcc и mnc, стоимостью, и, в случае ошибочных номеров, кодами ошибок.
+            Err = 1, // в ответ добавляется список ошибочных номеров телефонов с соответствующими статусами
+            Hlr = 1
+        };
+
+        var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
+        return result;
+    }
+
+    public async ValueTask<Sms.Response> SendPing(string phones)
+    {
+        var request = new Sms.Request(_options.Login, _options.Password)
+        {
+            Phones = phones,
+            Cost = 3, // обычная отправка смс, но добавить в ответ стоимость и новый баланс Клиента.
+            Op = 1, // в ответ добавляется список всех номеров телефонов с соответствующими статусами, значениями mcc и mnc, стоимостью, и, в случае ошибочных номеров, кодами ошибок.
+            Err = 1, // в ответ добавляется список ошибочных номеров телефонов с соответствующими статусами
+            Ping = 1
+        };
+
+        var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
+        return result;
     }
 
     #endregion
 
     #region Получение баланса
 
-    public ValueTask<Balance.Response> GetBalance(byte? currency = default)
+    public async ValueTask<Balance.Response> GetBalance(byte? currency = default)
     {
-        throw new NotImplementedException();
+        var request = new Balance.Request(_options.Login, _options.Password)
+        {
+            Currency = currency
+        };
+        var result = await SendGetRequestAsync<Balance.Request, Balance.Response>(request, _options.BalanceUrl);
+        return result;
     }
 
     #endregion
-    
-    public ValueTask<Status.SmsResponse> GetSmsStatus(string phone, int id, byte? all = default, byte? delete = default)
+
+    #region Статус доставки
+
+    public async ValueTask<Status.SmsResponse> GetSmsStatus(string phone, int id, byte? all = null, byte? delete = null)
     {
-        throw new NotImplementedException();
+        var request = new Status.Request(_options.Login, _options.Password)
+        {
+            Phone = phone,
+            Id = id,
+            All = all,
+            Delete = delete
+        };
+
+        var result = await SendGetRequestAsync<Status.Request, Status.SmsResponse>(request, _options.StatusUrl);
+        return result;
     }
 
-    public ValueTask<Status.HlrResponse> GetHlrStatus(string phone, int id, byte? all = default, byte? delete = default)
+    public async ValueTask<Status.HlrResponse> GetHlrStatus(string phone, int id, byte? all = null, byte? delete = null)
     {
-        throw new NotImplementedException();
+        var request = new Status.Request(_options.Login, _options.Password)
+        {
+            Phone = phone,
+            Id = id,
+            All = all,
+            Delete = delete
+        };
+
+        var result = await SendGetRequestAsync<Status.Request, Status.HlrResponse>(request, _options.StatusUrl);
+        return result;
     }
 
-    public ValueTask<History.Response> GetHistory(HistoryOptions options)
+    #endregion
+
+    #region Получение истории
+
+    public async ValueTask<History.Response> GetHistory(HistoryOptions options)
     {
-        throw new NotImplementedException();
+        var request = new History.Request(_options.Login, _options.Password)
+        {
+            StartDate = options.StartDate.ToString(),
+            EndDate = options.EndDate.ToString(),
+            EmailFormat = options.EmailFormat,
+            Phone = options.Phone,
+            Email = options.Email,
+            PrevId = options.PrevId,
+            Count = options.Count
+        };
+        var result = await SendGetRequestAsync<History.Request, History.Response>(request, _options.GetUrl);
+        return result;
     }
 
-    public ValueTask<Operator.Response> GetOperatorInfo(string phone)
+    #endregion
+
+    #region Получение информации об операторе
+
+    public async ValueTask<Operator.Response> GetOperatorInfo(string phone)
     {
-        throw new NotImplementedException();
+        var request = new Operator.Request(_options.Login, _options.Password)
+        {
+            Phone = phone
+        };
+
+        var result = await SendGetRequestAsync<Operator.Request, Operator.Response>(request, _options.OperatorUrl);
+        return result;
     }
 
-    public ValueTask<Statistics.Response> GetStatistics(DateOnly? date = default, DateOnly? endDate = default, byte? currency = default,
-        byte? balance = default)
+    #endregion
+
+    #region Получение статистики
+
+    public async ValueTask<Statistics.Response> GetStatistics(DateOnly? startDate = null, DateOnly? endDate = null,
+        byte? currency = null, byte? balance2 = null)
     {
-        throw new NotImplementedException();
+        var request = new Statistics.Request(_options.Login, _options.Password)
+        {
+            StartDate = startDate?.ToString(),
+            EndDate = endDate?.ToShortDateString(),
+            Balance2 = balance2,
+            Currency = currency
+        };
+
+        var result = await SendGetRequestAsync<Statistics.Request, Statistics.Response>(request, _options.GetUrl);
+        return result;
     }
-    
+
+    #endregion
+
     #region private methods
 
     /// <summary>
@@ -145,12 +251,40 @@ internal sealed class SmsCenterProvider(
         return result;
     }
 
+    /// <summary>
+    /// Отправка get-запроса
+    /// </summary>
+    /// <param name="request">Параметры запроса</param>
+    /// <param name="url"></param>
+    /// <typeparam name="TRequest"></typeparam>
+    /// <returns></returns>
     private async ValueTask<string> SendGetRequestRawAsync<TRequest>(TRequest request, string url)
         where TRequest : RequestBase
     {
         using var httpClient = CreateClient();
         var query = GetQueryString(request);
         using var response = await httpClient.GetAsync($"{url}?{query}");
+        var responseString = await response.Content.ReadAsStringAsync();
+        return responseString;
+    }
+
+    /// <summary>
+    /// Отправка post-запроса
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="url"></param>
+    /// <typeparam name="TRequest"></typeparam>
+    /// <returns></returns>
+    private async ValueTask<string> SendPostRequestRawAsync<TRequest>(TRequest request, string url)
+    {
+        using var httpClient = CreateClient();
+        using var response = await httpClient.PostAsync(
+            url,
+            new StringContent(
+                JsonSerializer.Serialize(request, JsonSerializerOptions),
+                Encoding.UTF8,
+                "application/json")
+        );
         var responseString = await response.Content.ReadAsStringAsync();
         return responseString;
     }
@@ -182,6 +316,6 @@ internal sealed class SmsCenterProvider(
 
         return string.Join("&", jsonObject.Select(o => $"{o.Key}={HttpUtility.UrlEncode(o.Value!.ToString())}"));
     }
-    
+
     #endregion
 }

@@ -230,6 +230,15 @@ public static class SmsCenter
             #endregion
         }
 
+        public sealed record CostResponse : ResponseBase
+        {
+            /// <summary>
+            /// Cтоимость SMS-сообщения
+            /// </summary>
+            [JsonPropertyName("cost")]
+            public double? Cost { get; set; } = default!;
+        }
+
         /// <summary>
         /// Базовый класс ответа сервера
         /// </summary>
@@ -301,6 +310,28 @@ public static class SmsCenter
             /// </summary>
             [JsonPropertyName("error")]
             public string Error { get; set; } = default!;
+        }
+        
+        /// <summary>
+        /// Дополнительные параметры запроса смс
+        /// </summary>
+        public sealed record AdditionalOptions
+        {
+            /// <summary>
+            /// Идентификатор сообщения. Назначается Клиентом.
+            /// Служит для дальнейшей идентификации сообщения.
+            /// Если не указывать, то будет назначен автоматически.
+            /// </summary>
+            [JsonPropertyName("id")]
+            public string? Id { get; set; } = default!;
+
+            /// <summary>
+            /// Имя отправителя, отображаемое в телефоне получателя.
+            /// Разрешены английские буквы, цифры, пробел и некоторые символы.
+            /// Длина – 11 символов или 15 цифр.
+            /// </summary>
+            [JsonPropertyName("sender")]
+            public string? Sender { get; set; } = default!;
         }
     }
 
@@ -866,28 +897,6 @@ public static class SmsCenter
             [JsonPropertyName("currency")]
             public string? Currency { get; set; }
         }
-    }
-
-    /// <summary>
-    /// Дополнительные параметры запроса смс
-    /// </summary>
-    public sealed record AdditionalOptions
-    {
-        /// <summary>
-        /// Идентификатор сообщения. Назначается Клиентом.
-        /// Служит для дальнейшей идентификации сообщения.
-        /// Если не указывать, то будет назначен автоматически.
-        /// </summary>
-        [JsonPropertyName("id")]
-        public string? Id { get; set; } = default!;
-
-        /// <summary>
-        /// Имя отправителя, отображаемое в телефоне получателя.
-        /// Разрешены английские буквы, цифры, пробел и некоторые символы.
-        /// Длина – 11 символов или 15 цифр.
-        /// </summary>
-        [JsonPropertyName("sender")]
-        public string? Sender { get; set; } = default!;
     }
 
     /// <summary>
