@@ -5,10 +5,84 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Sms Center - демонстрация основного функционада"
-        Height="450" 
+        Title="Sms Center - демонстрация основного функционала"
+        Height="600"
         Width="800"
         Icon="/Shared/Resources/favicon.png">
+    <Window.Resources>
+        <Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}" TargetType="TextBox">
+            <Setter Property="FontWeight" Value="Thin" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="AcceptsReturn" Value="True" />
+            <Setter Property="materialDesign:TextFieldAssist.HasClearButton" Value="True" />
+            <Setter Property="Cursor" Value="IBeam" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <AdornedElementPlaceholder />
+                            <ItemsControl
+                                FontSize="12"
+                                ItemsSource="{Binding}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Foreground="Red" Text="{Binding ErrorContent}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style BasedOn="{StaticResource MaterialDesignDatePicker}" TargetType="DatePicker">
+            <Setter Property="materialDesign:TextFieldAssist.HasClearButton" Value="True" />
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <AdornedElementPlaceholder />
+                            <ItemsControl
+                                FontSize="12"
+                                ItemsSource="{Binding}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Foreground="Red" Text="{Binding ErrorContent}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style BasedOn="{StaticResource MaterialDesignComboBox}" TargetType="ComboBox">
+            <Setter Property="FontWeight" Value="Thin" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="materialDesign:TextFieldAssist.HasClearButton" Value="True" />
+            <Setter Property="Cursor" Value="IBeam" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <AdornedElementPlaceholder />
+                            <ItemsControl
+                                FontSize="12"
+                                ItemsSource="{Binding}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Foreground="Red" Text="{Binding ErrorContent}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <materialDesign:DialogHost
         CloseOnClickAway="False"
         Identifier="RootDialogHost">
@@ -16,73 +90,56 @@
             <ContentControl />
         </materialDesign:DialogHost.DialogContent>
         <DockPanel>
-        <materialDesign:ColorZone Padding="16"
-                                  materialDesign:ElevationAssist.Elevation="Dp4"
-                                  DockPanel.Dock="Top"
-                                  Mode="PrimaryMid"
-                                  Background="{StaticResource PrimaryHueDarkBrush}"
-                                  Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
-        <!--         <Grid> -->
-        <!--             <Grid.ColumnDefinitions> -->
-        <!--                 <ColumnDefinition Width="40" /> -->
-        <!--                 <ColumnDefinition Width="*" /> -->
-        <!--                 <ColumnDefinition Width="Auto" /> -->
-        <!--                 <ColumnDefinition Width="Auto" /> -->
-        <!--             </Grid.ColumnDefinitions> -->
-        <!--             <ToggleButton Grid.Column="0" -->
-        <!--                           x:Name="MenuToggleButton" -->
-        <!--                           Cursor="Hand" -->
-        <!--                           Width="30" -->
-        <!--                           Height="30" -->
-        <!--                           AutomationProperties.Name="HamburgerToggleButton" -->
-        <!--                           IsChecked="True" -->
-        <!--                           Style="{StaticResource MaterialDesignHamburgerToggleButton}" /> -->
-        <!--             <TextBlock Grid.Column="1" Margin="15 0 0 0" -->
-        <!--                        HorizontalAlignment="Center" -->
-        <!--                        VerticalAlignment="Center" -->
-        <!--                        AutomationProperties.Name="CRM" -->
-        <!--                        FontSize="22" -->
-        <!--                        Text="CRM" /> -->
-        <!--             <TextBlock Grid.Column="2" -->
-        <!--                        Margin="0 0 10 0" -->
-        <!--                        Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" -->
-        <!--                        HorizontalAlignment="Right" -->
-        <!--                        VerticalAlignment="Center" /> -->
-        <!--             <Button Grid.Column="3" -->
-        <!--                     Foreground="White" -->
-        <!--                     Style="{StaticResource MaterialDesignIconButton}" -->
-        <!--                     Command="{Binding LogoutCommand}"> -->
-        <!--                 <materialDesign:PackIcon -->
-        <!--                     Kind="ExitToApp" /> -->
-        <!--             </Button> -->
-        <!--         </Grid> -->
-        </materialDesign:ColorZone>
-        <!--     <materialDesign:Card x:Name="MenuCard" -->
-        <!--                          DockPanel.Dock="Left" -->
-        <!--                          materialDesign:ElevationAssist.Elevation="Dp4" -->
-        <!--                          UniformCornerRadius="0" -->
-        <!--                          Background="{StaticResource SecondaryBrush}" -->
-        <!--                          Width="200"> -->
-        <!--         <materialDesign:Card.Style> -->
-        <!--             <Style TargetType="materialDesign:Card"> -->
-        <!--                 <Style.Triggers> -->
-        <!--                     <DataTrigger Binding="{Binding IsLoggedIn}" Value="False"> -->
-        <!--                         <Setter Property="Visibility" Value="Collapsed" /> -->
-        <!--                     </DataTrigger> -->
-        <!--                     <DataTrigger Binding="{Binding IsLoggedIn}" Value="True"> -->
-        <!--                         <Setter Property="Visibility" Value="Visible" /> -->
-        <!--                     </DataTrigger> -->
-        <!--                 </Style.Triggers> -->
-        <!--             </Style> -->
-        <!--         </materialDesign:Card.Style> -->
-        <!--         <ContentControl Content="{Binding CurrentMenu}" /> -->
-        <!--     </materialDesign:Card> -->
-        <!--     <ScrollViewer Background="#EEEEEE" -->
-        <!--                   DockPanel.Dock="Right" -->
-        <!--                   VerticalScrollBarVisibility="Auto" -->
-        <!--                   HorizontalScrollBarVisibility="Disabled"> -->
-        <!--         <ContentControl Content="{Binding CurrentViewModel}" /> -->
-        <!--     </ScrollViewer> -->
+            <materialDesign:ColorZone Padding="16"
+                                      materialDesign:ElevationAssist.Elevation="Dp4"
+                                      DockPanel.Dock="Top"
+                                      Mode="PrimaryMid"
+                                      Background="{StaticResource PrimaryHueDarkBrush}"
+                                      Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ToggleButton Grid.Column="0"
+                                  x:Name="MenuToggleButton"
+                                  Click="MenuToggleButton_OnClick"
+                                  Cursor="Hand"
+                                  Width="30"
+                                  Height="30"
+                                  AutomationProperties.Name="HamburgerToggleButton"
+                                  IsChecked="True"
+                                  Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                    <TextBlock Grid.Column="1" Margin="15 0 0 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               AutomationProperties.Name="CRM"
+                               FontSize="30"
+                               FontWeight="Bold"
+                               Text="Sms Center Demo" />
+                    <TextBlock Grid.Column="2"
+                               Margin="0 0 10 0"
+                               Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center" />
+                </Grid>
+            </materialDesign:ColorZone>
+            <materialDesign:Card x:Name="MenuCard"
+                                 DockPanel.Dock="Left"
+                                 materialDesign:ElevationAssist.Elevation="Dp4"
+                                 UniformCornerRadius="0"
+                                 Background="{StaticResource SecondaryBrush}"
+                                 Width="200">
+                <ContentControl Content="{Binding Menu}" />
+            </materialDesign:Card>
+            <ScrollViewer Background="#EEEEEE"
+                          DockPanel.Dock="Right"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <ContentControl Content="{Binding CurrentViewModel}" />
+            </ScrollViewer>
         </DockPanel>
     </materialDesign:DialogHost>
 </Window>

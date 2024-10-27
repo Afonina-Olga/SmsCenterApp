@@ -10,8 +10,6 @@
 
     <ItemGroup>
       <Folder Include="Domain\" />
-      <Folder Include="Pages\SendSms\" />
-      <Folder Include="Shared\Styles\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,7 +20,18 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci795" />
+      <PackageReference Include="MaterialDesignThemes" Version="4.6.1" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-rc.2.24473.5" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0-rc.2.24473.5" />
+      <PackageReference Include="Notification.Wpf" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Shared\Controls\Menu\Menu.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
     </ItemGroup>
 
 </Project>
