@@ -4,6 +4,8 @@ namespace SmsCenter.Api.Providers;
 
 internal interface ISmsCenterProvider
 {
+    #region Отправка смс https: //smsc.ru/api/http/send
+
     /// <summary>
     /// Отправка одного и того же сообщения смс на один или несколько номеров
     /// </summary>
@@ -13,7 +15,7 @@ internal interface ISmsCenterProvider
     ValueTask<Sms.Response> SendSms(
         string phones,
         string message,
-        AdditionalOptions? options = default);
+        Sms.AdditionalOptions? options = default);
 
     /// <summary>
     /// Отправка различных сообщений смс на несколько номеров
@@ -22,22 +24,29 @@ internal interface ISmsCenterProvider
     /// <param name="options">Дополнительные параметры запроса</param>
     ValueTask<Sms.Response> SendSms(
         string phoneAndMessageList,
-        AdditionalOptions? options = default);
+        Sms.AdditionalOptions? options = default);
 
     /// <summary>
     /// Получить стоимость отправки смс
     /// </summary>
     /// <param name="phones">Телефонные номера, разделенные запятой</param>
     /// <param name="message">Сообщение</param>
-    ValueTask<double> GetSmsSendingCost(string phones, string message);
-    
+    ValueTask<Sms.CostResponse> GetSmsSendingCost(string phones, string message);
+
     /// <summary>
     /// Получить стоимость отправки смс
     /// </summary>
     /// <param name="phoneAndMessageList">Список номеров телефонов и соответствующих им сообщений, разделенных двоеточием или точкой с запятой</param>
     /// <returns></returns>
-    ValueTask<double> GetSmsSendingCost(string phoneAndMessageList);
+    ValueTask<Sms.CostResponse> GetSmsSendingCost(string phoneAndMessageList);
+
+    ValueTask<Sms.Response> SendHlr(string phone);
     
+    ValueTask<Sms.Response> SendPing(string phone);
+
+    #endregion
+
+
     /// <summary>
     /// Получение баланса
     /// </summary>
