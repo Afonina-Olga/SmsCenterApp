@@ -8,4 +8,21 @@
         <UseWPF>true</UseWPF>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Domain\" />
+      <Folder Include="Pages\SendSms\" />
+      <Folder Include="Shared\Styles\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Shared\Resources\favicon.png" />
+      <Resource Include="Shared\Resources\favicon.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci795" />
+    </ItemGroup>
+
 </Project>
