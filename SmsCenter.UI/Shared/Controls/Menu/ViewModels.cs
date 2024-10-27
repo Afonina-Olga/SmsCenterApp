@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Design;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
 using SmsCenter.UI.Shared.Services;
 using SmsCenter.UI.Shared.ViewModels;

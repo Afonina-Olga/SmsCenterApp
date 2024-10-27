@@ -12,7 +12,7 @@ public class MainViewModel : ViewModelBase
     private readonly INavigationService _navigationService;
     public ViewModelBase CurrentViewModel => _navigationService.CurrentViewModel;
 
-    public MenuViewModel Menu { get; set; } 
+    public MenuViewModel CurrentMenu { get; set; } 
 
     // ReSharper disable once MemberCanBePrivate.Global
     public ICommand NavigateCommand { get; }
@@ -41,7 +41,7 @@ public class MainViewModel : ViewModelBase
             type: ViewType.StatusSms,
             icon: PackIconKind.FaceAgent));
 
-        Menu = menu;
+        CurrentMenu = menu;
     }
 
     private void OnNavigatorStateChanged()

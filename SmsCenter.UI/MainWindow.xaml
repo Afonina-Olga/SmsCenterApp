@@ -115,15 +115,9 @@
                     <TextBlock Grid.Column="1" Margin="15 0 0 0"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               AutomationProperties.Name="CRM"
                                FontSize="30"
                                FontWeight="Bold"
                                Text="Sms Center Demo" />
-                    <TextBlock Grid.Column="2"
-                               Margin="0 0 10 0"
-                               Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center" />
                 </Grid>
             </materialDesign:ColorZone>
             <materialDesign:Card x:Name="MenuCard"
@@ -132,7 +126,7 @@
                                  UniformCornerRadius="0"
                                  Background="{StaticResource SecondaryBrush}"
                                  Width="200">
-                <ContentControl Content="{Binding Menu}" />
+                <ContentControl Content="{Binding CurrentMenu}" />
             </materialDesign:Card>
             <ScrollViewer Background="#EEEEEE"
                           DockPanel.Dock="Right"
