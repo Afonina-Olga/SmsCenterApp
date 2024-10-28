@@ -31,21 +31,20 @@ internal interface ISmsCenterProvider
     /// </summary>
     /// <param name="phones">Телефонные номера, разделенные запятой</param>
     /// <param name="message">Сообщение</param>
-    ValueTask<Sms.CostResponse> GetSmsSendingCost(string phones, string message);
+    ValueTask<Sms.Response> GetSmsSendingCost(string phones, string message);
 
     /// <summary>
     /// Получить стоимость отправки смс
     /// </summary>
     /// <param name="phoneAndMessageList">Список номеров телефонов и соответствующих им сообщений, разделенных двоеточием или точкой с запятой</param>
     /// <returns></returns>
-    ValueTask<Sms.CostResponse> GetSmsSendingCost(string phoneAndMessageList);
+    ValueTask<Sms.Response> GetSmsSendingCost(string phoneAndMessageList);
 
     ValueTask<Sms.Response> SendHlr(string phone);
     
     ValueTask<Sms.Response> SendPing(string phone);
 
     #endregion
-
 
     /// <summary>
     /// Получение баланса

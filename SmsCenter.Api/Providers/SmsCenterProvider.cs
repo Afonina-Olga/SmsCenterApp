@@ -24,12 +24,16 @@ internal sealed class SmsCenterProvider(
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         NumberHandling = JsonNumberHandling.AllowReadingFromString,
-        Converters = { DateTimeConverter.Instance }
+        Converters =
+        {
+            DateTimeConverter.Instance,
+            StringConverter.Instance
+        }
     };
 
     private HttpClient CreateClient() => httpClientFactory.CreateClient(HttpClientName);
 
-    private const string HttpClientName = "SmsCenterProviderHttpClient";
+    public const string HttpClientName = "SmsCenterProviderHttpClient";
 
     #region Отправка смс
 
@@ -42,7 +46,6 @@ internal sealed class SmsCenterProvider(
             Message = message,
             Cost = 3, // обычная отправка смс, но добавить в ответ стоимость и новый баланс Клиента.
             Op = 1, // в ответ добавляется список всех номеров телефонов с соответствующими статусами, значениями mcc и mnc, стоимостью, и, в случае ошибочных номеров, кодами ошибок.
-            Err = 1, // в ответ добавляется список ошибочных номеров телефонов с соответствующими статусами
             Sender = options?.Sender,
             Id = options?.Id
         };
@@ -58,7 +61,6 @@ internal sealed class SmsCenterProvider(
             PhoneAndMessageList = phoneAndMessageList,
             Cost = 3, // обычная отправка смс, но добавить в ответ стоимость и новый баланс Клиента.
             Op = 1, // в ответ добавляется список всех номеров телефонов с соответствующими статусами, значениями mcc и mnc, стоимостью, и, в случае ошибочных номеров, кодами ошибок.
-            Err = 1, // в ответ добавляется список ошибочных номеров телефонов с соответствующими статусами
             Sender = options?.Sender,
             Id = options?.Id
         };
@@ -67,37 +69,32 @@ internal sealed class SmsCenterProvider(
         return result;
     }
 
-    public async ValueTask<Sms.CostResponse> GetSmsSendingCost(string phones, string message)
+    public async ValueTask<Sms.Response> GetSmsSendingCost(string phones, string message)
     {
         var request = new Sms.Request(_options.Login, _options.Password)
         {
             Phones = phones,
             Message = message,
-            Cost = 1 // получить стоимость рассылки без реальной отправки
+            Cost = 1, // получить стоимость рассылки без реальной отправки
+            Op = 1
         };
 
         var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
-        return new Sms.CostResponse
-        {
-            Cost = result.Cost,
-            Error = result.Error
-        };
+
+        return result;
     }
 
-    public async ValueTask<Sms.CostResponse> GetSmsSendingCost(string phoneAndMessageList)
+    public async ValueTask<Sms.Response> GetSmsSendingCost(string phoneAndMessageList)
     {
         var request = new Sms.Request(_options.Login, _options.Password)
         {
             PhoneAndMessageList = phoneAndMessageList,
             Cost = 1, // получить стоимость рассылки без реальной отправки
+            Op = 1
         };
 
         var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
-        return new Sms.CostResponse
-        {
-            Cost = result.Cost,
-            Error = result.Error
-        };
+        return result;
     }
 
     public async ValueTask<Sms.Response> SendHlr(string phones)
@@ -295,10 +292,9 @@ internal sealed class SmsCenterProvider(
     /// <param name="responseString">Строка ответа</param>
     private static Error? HandleErrorIfExists(string responseString)
     {
-        if (responseString.Contains("error_code"))
-            JsonSerializer.Deserialize<Error>(responseString, JsonSerializerOptions);
-
-        return null;
+        return responseString.Contains("error_code")
+            ? JsonSerializer.Deserialize<Error>(responseString, JsonSerializerOptions)
+            : null;
     }
 
     /// <summary>

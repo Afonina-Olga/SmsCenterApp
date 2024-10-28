@@ -38,8 +38,7 @@ public static class SmsCenter
     public sealed record Error(
         [property: JsonPropertyName("id")] int? Id,
         [property: JsonPropertyName("error")] string Message,
-        [property: JsonPropertyName("error_code")]
-        byte? Code);
+        [property: JsonPropertyName("error_code")] byte Code);
 
     public static class Sms
     {
@@ -109,7 +108,7 @@ public static class SmsCenter
             [JsonPropertyName("sender")]
             public string? Sender { get; set; } = default!;
 
-           /// <summary>
+            /// <summary>
             /// Время отправки SMS-сообщения абоненту.
             /// Форматы:
             /// DDMMYYhhmm или DD.MM.YY hh:mm.
@@ -176,7 +175,8 @@ public static class SmsCenter
             /// подтверждения номера телефона, если с момента последнего подтверждения
             /// прошло больше smsreq дней. Диапазон значений от 10 до 999.
             /// </summary>
-            [JsonPropertyName("smsreq")] public int SmsReq { get; set; } = default!;
+            [JsonPropertyName("smsreq")]
+            public int SmsReq { get; set; } = default!;
 
             /// <summary>
             /// Признак необходимости получения стоимости рассылки
@@ -230,13 +230,58 @@ public static class SmsCenter
             #endregion
         }
 
-        public sealed record CostResponse : ResponseBase
+        public sealed record CostResponse
+        {
+            /// <summary>
+            /// Количество смс
+            /// </summary>
+            [JsonPropertyName("cnt")]
+            public int Count { get; set; }
+            
+            /// <summary>
+            /// Cтоимость SMS-сообщения
+            /// </summary>
+            [JsonPropertyName("cost")]
+            public double Cost { get; set; }
+            
+            /// <summary>
+            /// Код статуса SMS-сообщения, заполняется при наличии ошибок
+            /// </summary>
+            [JsonPropertyName("status")]
+            public string? ErrorStatus { get; set; } = default!;
+
+            /// <summary>
+            /// Код ошибки в статусе
+            /// </summary>
+            [JsonPropertyName("error")]
+            public string? Error { get; set; } = default!;
+
+            /// <summary>
+            /// Числовой код страны абонента плюс числовой код оператора абонента
+            /// </summary>
+            [JsonPropertyName("mccmnc")]
+            public string Mccmnc { get; set; } = default!;
+        }
+
+        public sealed record CostResponseWithDetails
         {
             /// <summary>
             /// Cтоимость SMS-сообщения
             /// </summary>
             [JsonPropertyName("cost")]
-            public double? Cost { get; set; } = default!;
+            public double Cost { get; set; }
+
+            /// <summary>
+            /// Количество смс
+            /// </summary>
+            [JsonPropertyName("cnt")]
+            public int Count { get; set; }
+            
+            /// <summary>
+            /// Детализация по номерам телефонов
+            /// </summary>
+            [JsonPropertyName("phones")]
+            public Details[] Details { get; set; } = default!;
         }
 
         /// <summary>
@@ -249,31 +294,31 @@ public static class SmsCenter
             /// (при голосовом сообщении (звонке))
             /// </summary>
             [JsonPropertyName("cnt")]
-            public int? Count { get; set; } = default!;
+            public int Count { get; set; } = default!;
 
             /// <summary>
             /// Идентификатор сообщения, переданный Клиентом или назначенный Сервером автоматически
             /// </summary>
             [JsonPropertyName("id")]
-            public int? Id { get; set; } = default!;
+            public int Id { get; set; } = default!;
 
             /// <summary>
             /// Cтоимость SMS-сообщения
             /// </summary>
             [JsonPropertyName("cost")]
-            public double? Cost { get; set; } = default!;
+            public double Cost { get; set; } = default!;
 
             /// <summary>
             /// Новый баланс Клиента
             /// </summary>
             [JsonPropertyName("balance")]
-            public double? Balance { get; set; } = default!;
+            public double Balance { get; set; } = default!;
 
             /// <summary>
             /// Детализация по номерам телефонов
             /// </summary>
             [JsonPropertyName("phones")]
-            public Details[]? Details { get; set; } = default!;
+            public Details[] Details { get; set; } = default!;
         }
 
         /// <summary>
@@ -297,21 +342,21 @@ public static class SmsCenter
             /// Стоимость SMS-сообщения
             /// </summary>
             [JsonPropertyName("cost")]
-            public double? Cost { get; set; } = default!;
+            public double Cost { get; set; } = default!;
 
             /// <summary>
-            /// Код статуса SMS-сообщения
+            /// Код статуса SMS-сообщения, заполняется при наличии ошибок
             /// </summary>
             [JsonPropertyName("status")]
-            public string Status { get; set; } = default!;
+            public string? ErrorStatus { get; set; } = default!;
 
             /// <summary>
             /// Код ошибки в статусе
             /// </summary>
             [JsonPropertyName("error")]
-            public string Error { get; set; } = default!;
+            public string? Error { get; set; } = default!;
         }
-        
+
         /// <summary>
         /// Дополнительные параметры запроса смс
         /// </summary>

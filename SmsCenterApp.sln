@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsCenter.UI", "SmsCenter.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsCenter.Tests", "SmsCenter.Tests\SmsCenter.Tests.csproj", "{5F421204-37A5-4C24-BD0A-8E93BB0DBD81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsCenter.ConsoleUI", "SmsCenter.ConsoleUI\SmsCenter.ConsoleUI.csproj", "{BA6F4E25-A57C-4906-B6C1-17D049D63520}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{5F421204-37A5-4C24-BD0A-8E93BB0DBD81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F421204-37A5-4C24-BD0A-8E93BB0DBD81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F421204-37A5-4C24-BD0A-8E93BB0DBD81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA6F4E25-A57C-4906-B6C1-17D049D63520}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA6F4E25-A57C-4906-B6C1-17D049D63520}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA6F4E25-A57C-4906-B6C1-17D049D63520}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA6F4E25-A57C-4906-B6C1-17D049D63520}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -10,7 +10,7 @@ public interface ISmsCenterService
     /// <param name="phones">Список телефонов</param>
     /// <param name="message">Сообщение</param>
     /// <returns>Стоимость рассылки</returns>
-    ValueTask<Sms.CostResponse> GetCost(string[] phones, string message);
+    ValueTask<Sms.CostResponseWithDetails> GetCost(string[] phones, string message);
 
     /// <summary>
     /// Получить стоимость рассылки
@@ -25,27 +25,27 @@ public interface ISmsCenterService
     /// </summary>
     /// <param name="list">Список телефонов и сообщений</param>
     /// <returns>Стоимость рассылки</returns>
-    ValueTask<Sms.CostResponse> GetCost(Dictionary<string, string> list);
+    ValueTask<Sms.CostResponseWithDetails> GetCost(Dictionary<string, string> list);
 
     /// <summary>
     /// Получить баланс клиента
     /// </summary>
-    ValueTask<Balance.Response> GetBalance();
+    ValueTask<double> GetBalance();
 
     /// <summary>
     /// Отправить смс на номер
     /// </summary>
-    ValueTask<Sms.Response> SendSms(string phone, string message, Sms.AdditionalOptions options);
+    ValueTask<Sms.Response> SendSms(string phone, string message, Sms.AdditionalOptions? options = null);
 
     /// <summary>
     /// Отправить смс на несколько номеров
     /// </summary>
-    ValueTask<Sms.Response> SendSms(string[] phones, string message, Sms.AdditionalOptions options);
+    ValueTask<Sms.Response> SendSms(string[] phones, string message, Sms.AdditionalOptions? options = null);
 
     /// <summary>
     /// Отправить на каждый номер отдельное смс
     /// </summary>
-    ValueTask<Sms.Response> SendSms(Dictionary<string, string> messagesByPhone, Sms.AdditionalOptions options);
+    ValueTask<Sms.Response> SendSms(Dictionary<string, string> messagesByPhone, Sms.AdditionalOptions? options = null);
 
     /// <summary>
     /// Проверка телефона на доступность

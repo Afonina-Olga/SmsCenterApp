@@ -1,6 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 
-namespace SmsCenter.Api.Internal;
+namespace SmsCenter.Api.Internal.Extensions;
 
 internal static class StringExtensions
 {
