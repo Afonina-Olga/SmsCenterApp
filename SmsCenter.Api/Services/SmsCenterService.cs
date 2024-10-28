@@ -74,7 +74,10 @@ internal sealed class SmsCenterService(ISmsCenterProvider provider) : ISmsCenter
 
     #region Отправка смс
 
-    public async ValueTask<Sms.Response> SendSms(string phone, string message, Sms.AdditionalOptions? options = default)
+    public async ValueTask<Sms.Response> SendSms(
+        string phone,
+        string message,
+        Sms.AdditionalOptions? options = default)
     {
         var result = await provider.SendSms(
             phones: phone.ValidatePhone(),
@@ -87,7 +90,9 @@ internal sealed class SmsCenterService(ISmsCenterProvider provider) : ISmsCenter
         return result;
     }
 
-    public async ValueTask<Sms.Response> SendSms(string[] phones, string message,
+    public async ValueTask<Sms.Response> SendSms(
+        string[] phones,
+        string message,
         Sms.AdditionalOptions? options = default)
     {
         var result = await provider.SendSms(
@@ -101,7 +106,8 @@ internal sealed class SmsCenterService(ISmsCenterProvider provider) : ISmsCenter
         return result;
     }
 
-    public async ValueTask<Sms.Response> SendSms(Dictionary<string, string> messagesByPhone,
+    public async ValueTask<Sms.Response> SendSms(
+        Dictionary<string, string> messagesByPhone,
         Sms.AdditionalOptions? options = default)
     {
         var result = await provider.SendSms(

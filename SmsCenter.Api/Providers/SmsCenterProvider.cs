@@ -36,7 +36,7 @@ internal sealed class SmsCenterProvider(
     public const string HttpClientName = "SmsCenterProviderHttpClient";
 
     #region Стоимость рассылки
-    
+
     public async ValueTask<Sms.Response> GetSmsSendingCost(string phones, string message)
     {
         var request = new Sms.Request(_options.Login, _options.Password)
@@ -64,9 +64,9 @@ internal sealed class SmsCenterProvider(
         var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
         return result;
     }
-    
+
     #endregion
-    
+
     #region Получение баланса
 
     public async ValueTask<Balance.Response> GetBalance(byte? currency = default)
@@ -80,10 +80,12 @@ internal sealed class SmsCenterProvider(
     }
 
     #endregion
-    
+
     #region Отправка смс
 
-    public async ValueTask<Sms.Response> SendSms(string phones, string message,
+    public async ValueTask<Sms.Response> SendSms(
+        string phones,
+        string message,
         Sms.AdditionalOptions? options = default)
     {
         var request = new Sms.Request(_options.Login, _options.Password)
@@ -147,7 +149,6 @@ internal sealed class SmsCenterProvider(
 
     #endregion
 
-    
 
     #region Статус доставки
 

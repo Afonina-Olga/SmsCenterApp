@@ -100,6 +100,70 @@ catch (Exception e)
 
 #endregion
 
+#region Отправка смс
+
+try
+{
+    var result = await service.SendSms(phones, message);
+    PrintSubHeader("Отправка одного и того же сообщения на несколько номеров телефонов");
+    PrintRequestFromArray(phones, message);
+    Console.WriteLine();
+    PrintResponse(result);
+}
+catch (Exception e)
+{
+    PrintErrorMessage(e.Message);
+}
+
+try
+{
+    var result = await service.SendSms(phone, message);
+    PrintSubHeader($"Отправка сообщения \"{message}\" на номер {phone}");
+    PrintRequest(phone, message);
+    Console.WriteLine();
+    PrintResponse(result);
+}
+catch (Exception e)
+{
+    PrintErrorMessage(e.Message);
+}
+
+try
+{
+    var result = await service.SendSms(phone, longMessage);
+    PrintSubHeader($"Отправка длинного сообщения на номер {phone}");
+    PrintRequest(phone, longMessage);
+    Console.WriteLine();
+    PrintResponse(result);
+}
+catch (Exception e)
+{
+    PrintErrorMessage(e.Message);
+}
+
+try
+{
+    var list = new Dictionary<string, string>()
+    {
+        { "+79265718860", longMessage },
+        { "+79251547412", message },
+        { "+79271234567", message },
+        { "+79262638751", message }
+    };
+    var result = await service.SendSms(list);
+    PrintSubHeader($"Отправка различных сообщений на различные номера");
+    PrintRequestFromDictionary(list);
+    Console.WriteLine();
+    PrintResponse(result);
+}
+
+catch (Exception e)
+{
+    PrintErrorMessage(e.Message);
+}
+
+#endregion
+
 return;
 
 void PrintHeader(string msg)
