@@ -27,11 +27,7 @@ try
 {
     var result = await service.GetCost(phones, message);
     PrintSubHeader("Стоимость отправки одного и того же сообщения на несколько номеров телефонов");
-    Console.WriteLine("Запрос: ");
-    Console.ForegroundColor = ConsoleColor.DarkGray;
-    Console.WriteLine($"Номера телефонов: {string.Join(',', phones)}");
-    Console.WriteLine($"Сообщение:        {message}");
-    Console.ForegroundColor = ConsoleColor.White;
+    PrintRequestFromArray(phones, message);
     Console.WriteLine();
     PrintResponse(result);
 }
@@ -43,13 +39,9 @@ catch (Exception e)
 try
 {
     var result = await service.GetCost(phone, message);
-    Console.WriteLine("Запрос: ");
-    Console.ForegroundColor = ConsoleColor.DarkGray;
-    Console.WriteLine($"Номер телефона: {phone}");
-    Console.WriteLine($"Сообщение:      {message}");
-    Console.ForegroundColor = ConsoleColor.White;
-    Console.WriteLine();
     PrintSubHeader($"Стоимость отправки сообщения \"{message}\" на номер {phone}");
+    PrintRequest(phone, message);
+    Console.WriteLine();
     PrintResponse(result);
 }
 catch (Exception e)
@@ -61,11 +53,7 @@ try
 {
     var result = await service.GetCost(phone, longMessage);
     PrintSubHeader($"Стоимость отправки длинного сообщения на номер {phone}");
-    Console.WriteLine("Запрос: ");
-    Console.ForegroundColor = ConsoleColor.DarkGray;
-    Console.WriteLine($"Номер телефона: {phone}");
-    Console.WriteLine($"Сообщение:      {longMessage}");
-    Console.ForegroundColor = ConsoleColor.White;
+    PrintRequest(phone, longMessage);
     Console.WriteLine();
     PrintResponse(result);
 }
@@ -85,17 +73,26 @@ try
     };
     var result = await service.GetCost(list);
     PrintSubHeader($"Стоимость отправки различных сообщений на различные номера");
-    Console.WriteLine("Запрос: ");
-    Console.ForegroundColor = ConsoleColor.DarkGray;
-    var listResponse = string.Join(
-        Environment.NewLine,
-        list.Select(l => $"Номер: {l.Key}, Сообщение: {l.Value}"));
-    Console.WriteLine($"{listResponse}");
-    Console.ForegroundColor = ConsoleColor.White;
+    PrintRequestFromDictionary(list);
     Console.WriteLine();
     PrintResponse(result);
 }
 
+catch (Exception e)
+{
+    PrintErrorMessage(e.Message);
+}
+
+#endregion
+
+#region Баланс
+
+try
+{
+    var result = await service.GetBalance();
+    PrintSubHeader("Получение баланса");
+    Console.WriteLine($"Остаток: {result} руб.");
+}
 catch (Exception e)
 {
     PrintErrorMessage(e.Message);
@@ -146,5 +143,34 @@ void PrintResponse<T>(T value) where T : class
     };
     var jsonString = JsonSerializer.Serialize(value, serializerOptions);
     Console.WriteLine(jsonString);
+    Console.ForegroundColor = ConsoleColor.White;
+}
+
+void PrintRequestFromDictionary(Dictionary<string, string> dict)
+{
+    Console.WriteLine("Запрос: ");
+    Console.ForegroundColor = ConsoleColor.DarkGray;
+    var listResponse = string.Join(
+        Environment.NewLine,
+        dict.Select(l => $"Номер: {l.Key}, Сообщение: {l.Value}"));
+    Console.WriteLine($"{listResponse}");
+    Console.ForegroundColor = ConsoleColor.White;
+}
+
+void PrintRequest(string number, string msg)
+{
+    Console.WriteLine("Запрос: ");
+    Console.ForegroundColor = ConsoleColor.DarkGray;
+    Console.WriteLine($"Номер телефона: {number}");
+    Console.WriteLine($"Сообщение:      {msg}");
+    Console.ForegroundColor = ConsoleColor.White;
+}
+
+void PrintRequestFromArray(string[] numbers, string msg)
+{
+    Console.WriteLine("Запрос: ");
+    Console.ForegroundColor = ConsoleColor.DarkGray;
+    Console.WriteLine($"Номера телефонов: {string.Join(',', numbers)}");
+    Console.WriteLine($"Сообщение:        {msg}");
     Console.ForegroundColor = ConsoleColor.White;
 }

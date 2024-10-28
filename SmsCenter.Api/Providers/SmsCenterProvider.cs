@@ -35,6 +35,52 @@ internal sealed class SmsCenterProvider(
 
     public const string HttpClientName = "SmsCenterProviderHttpClient";
 
+    #region Стоимость рассылки
+    
+    public async ValueTask<Sms.Response> GetSmsSendingCost(string phones, string message)
+    {
+        var request = new Sms.Request(_options.Login, _options.Password)
+        {
+            Phones = phones,
+            Message = message,
+            Cost = 1, // получить стоимость рассылки без реальной отправки
+            Op = 1
+        };
+
+        var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
+
+        return result;
+    }
+
+    public async ValueTask<Sms.Response> GetSmsSendingCost(string phoneAndMessageList)
+    {
+        var request = new Sms.Request(_options.Login, _options.Password)
+        {
+            PhoneAndMessageList = phoneAndMessageList,
+            Cost = 1, // получить стоимость рассылки без реальной отправки
+            Op = 1
+        };
+
+        var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
+        return result;
+    }
+    
+    #endregion
+    
+    #region Получение баланса
+
+    public async ValueTask<Balance.Response> GetBalance(byte? currency = default)
+    {
+        var request = new Balance.Request(_options.Login, _options.Password)
+        {
+            Currency = currency
+        };
+        var result = await SendGetRequestAsync<Balance.Request, Balance.Response>(request, _options.BalanceUrl);
+        return result;
+    }
+
+    #endregion
+    
     #region Отправка смс
 
     public async ValueTask<Sms.Response> SendSms(string phones, string message,
@@ -63,34 +109,6 @@ internal sealed class SmsCenterProvider(
             Op = 1, // в ответ добавляется список всех номеров телефонов с соответствующими статусами, значениями mcc и mnc, стоимостью, и, в случае ошибочных номеров, кодами ошибок.
             Sender = options?.Sender,
             Id = options?.Id
-        };
-
-        var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
-        return result;
-    }
-
-    public async ValueTask<Sms.Response> GetSmsSendingCost(string phones, string message)
-    {
-        var request = new Sms.Request(_options.Login, _options.Password)
-        {
-            Phones = phones,
-            Message = message,
-            Cost = 1, // получить стоимость рассылки без реальной отправки
-            Op = 1
-        };
-
-        var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
-
-        return result;
-    }
-
-    public async ValueTask<Sms.Response> GetSmsSendingCost(string phoneAndMessageList)
-    {
-        var request = new Sms.Request(_options.Login, _options.Password)
-        {
-            PhoneAndMessageList = phoneAndMessageList,
-            Cost = 1, // получить стоимость рассылки без реальной отправки
-            Op = 1
         };
 
         var result = await SendGetRequestAsync<Sms.Request, Sms.Response>(request, _options.SmsUrl);
@@ -129,19 +147,7 @@ internal sealed class SmsCenterProvider(
 
     #endregion
 
-    #region Получение баланса
-
-    public async ValueTask<Balance.Response> GetBalance(byte? currency = default)
-    {
-        var request = new Balance.Request(_options.Login, _options.Password)
-        {
-            Currency = currency
-        };
-        var result = await SendGetRequestAsync<Balance.Request, Balance.Response>(request, _options.BalanceUrl);
-        return result;
-    }
-
-    #endregion
+    
 
     #region Статус доставки
 
