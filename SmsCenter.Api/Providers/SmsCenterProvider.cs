@@ -117,6 +117,10 @@ internal sealed class SmsCenterProvider(
         return result;
     }
 
+    #endregion
+
+    #region Проверка доступности номера
+
     public async ValueTask<Sms.Response> SendHlr(string phones)
     {
         var request = new Sms.Request(_options.Login, _options.Password)
@@ -124,7 +128,6 @@ internal sealed class SmsCenterProvider(
             Phones = phones,
             Cost = 3, // обычная отправка смс, но добавить в ответ стоимость и новый баланс Клиента.
             Op = 1, // в ответ добавляется список всех номеров телефонов с соответствующими статусами, значениями mcc и mnc, стоимостью, и, в случае ошибочных номеров, кодами ошибок.
-            Err = 1, // в ответ добавляется список ошибочных номеров телефонов с соответствующими статусами
             Hlr = 1
         };
 
@@ -139,7 +142,6 @@ internal sealed class SmsCenterProvider(
             Phones = phones,
             Cost = 3, // обычная отправка смс, но добавить в ответ стоимость и новый баланс Клиента.
             Op = 1, // в ответ добавляется список всех номеров телефонов с соответствующими статусами, значениями mcc и mnc, стоимостью, и, в случае ошибочных номеров, кодами ошибок.
-            Err = 1, // в ответ добавляется список ошибочных номеров телефонов с соответствующими статусами
             Ping = 1
         };
 
@@ -149,34 +151,46 @@ internal sealed class SmsCenterProvider(
 
     #endregion
 
-
     #region Статус доставки
 
-    public async ValueTask<Status.SmsResponse> GetSmsStatus(string phone, int id, byte? all = null, byte? delete = null)
+    public async ValueTask<Status.SmsResponse> GetSmsStatus(string phone, int id)
     {
         var request = new Status.Request(_options.Login, _options.Password)
         {
             Phone = phone,
             Id = id,
-            All = all,
-            Delete = delete
+            All = 2
         };
 
         var result = await SendGetRequestAsync<Status.Request, Status.SmsResponse>(request, _options.StatusUrl);
         return result;
     }
 
-    public async ValueTask<Status.HlrResponse> GetHlrStatus(string phone, int id, byte? all = null, byte? delete = null)
+    public async ValueTask<Status.HlrResponse> GetHlrStatus(
+        string phone,
+        int id)
     {
         var request = new Status.Request(_options.Login, _options.Password)
         {
             Phone = phone,
             Id = id,
-            All = all,
-            Delete = delete
+            All = 2
         };
 
-        var result = await SendGetRequestAsync<Status.Request, Status.HlrResponse>(request, _options.StatusUrl);
+        var result =  await SendGetRequestAsync<Status.Request, Status.HlrResponse>(request, _options.StatusUrl);
+        return result;
+    }
+
+    public async ValueTask<Status.DeleteResponse> DeleteSms(string phone, int id)
+    {
+        var request = new Status.Request(_options.Login, _options.Password)
+        {
+            Phone = phone,
+            Id = id,
+            Delete = 1
+        };
+
+        var result = await SendGetRequestAsync<Status.Request, Status.DeleteResponse>(request, _options.StatusUrl);
         return result;
     }
 
@@ -219,8 +233,11 @@ internal sealed class SmsCenterProvider(
 
     #region Получение статистики
 
-    public async ValueTask<Statistics.Response> GetStatistics(DateOnly? startDate = null, DateOnly? endDate = null,
-        byte? currency = null, byte? balance2 = null)
+    public async ValueTask<Statistics.Response> GetStatistics(
+        DateOnly? startDate = null, 
+        DateOnly? endDate = null,
+        byte? currency = null,
+        byte? balance2 = null)
     {
         var request = new Statistics.Request(_options.Login, _options.Password)
         {
@@ -251,7 +268,7 @@ internal sealed class SmsCenterProvider(
     {
         var responseString = await SendGetRequestRawAsync(request, url);
         var result = JsonSerializer.Deserialize<TResponse>(responseString, JsonSerializerOptions)!;
-        result.Error = HandleErrorIfExists(responseString);
+        result.Error = HandleError(responseString);
         return result;
     }
 
@@ -297,7 +314,7 @@ internal sealed class SmsCenterProvider(
     /// Десериализация строки ошибки
     /// </summary>
     /// <param name="responseString">Строка ответа</param>
-    private static Error? HandleErrorIfExists(string responseString)
+    private static Error? HandleError(string responseString)
     {
         return responseString.Contains("error_code")
             ? JsonSerializer.Deserialize<Error>(responseString, JsonSerializerOptions)

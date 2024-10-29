@@ -164,6 +164,52 @@ catch (Exception e)
 
 #endregion
 
+#region Проверка доступности номера
+
+try
+{
+    var result = await service.SendHlr(phone);
+    PrintSubHeader("Проверка номера на доступность (HLR)");
+    PrintResponseFromBool(result, "Абонент доступен", "Абонент вне зоны доступа");
+}
+catch (Exception e)
+{
+    PrintErrorMessage(e.Message);
+}
+
+try
+{
+    var result = await service.SendPing(phone);
+    PrintSubHeader("Проверка номера на доступность (Ping)");
+    PrintResponseFromBool(result, "Абонент доступен", "Абонент вне зоны доступа");
+}
+catch (Exception e)
+{
+    PrintErrorMessage(e.Message);
+}
+
+#endregion
+
+#region Удаление смс
+
+try
+{
+    Console.WriteLine("Подождать минуту...");
+    await Task.Delay(65000);
+    var sms = await service.SendSms(phone, message);
+    Console.WriteLine("Небольшая задержка между запросами...");
+    await Task.Delay(5000);
+    var result = await service.DeleteSms(phone, sms.Id);
+    PrintSubHeader("Удаление одного сообщения");
+    PrintResponseFromBool(result, "Сообщение удалено", "Сообщение не удалено");
+}
+catch (Exception e)
+{
+    PrintErrorMessage(e.Message);
+}
+
+#endregion
+
 return;
 
 void PrintHeader(string msg)
@@ -236,5 +282,12 @@ void PrintRequestFromArray(string[] numbers, string msg)
     Console.ForegroundColor = ConsoleColor.DarkGray;
     Console.WriteLine($"Номера телефонов: {string.Join(',', numbers)}");
     Console.WriteLine($"Сообщение:        {msg}");
+    Console.ForegroundColor = ConsoleColor.White;
+}
+
+void PrintResponseFromBool(bool result, string success, string failed)
+{
+    Console.ForegroundColor = ConsoleColor.DarkGray;
+    Console.WriteLine(result ? success : failed);
     Console.ForegroundColor = ConsoleColor.White;
 }

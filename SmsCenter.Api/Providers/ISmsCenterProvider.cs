@@ -41,7 +41,7 @@ internal interface ISmsCenterProvider
     ValueTask<Sms.Response> GetSmsSendingCost(string phoneAndMessageList);
 
     ValueTask<Sms.Response> SendHlr(string phone);
-    
+
     ValueTask<Sms.Response> SendPing(string phone);
 
     #endregion
@@ -60,30 +60,19 @@ internal interface ISmsCenterProvider
     /// <param name="id">
     /// Идентификатор сообщения или список идентификаторов через
     /// запятую при запросе статусов нескольких сообщений.
-    /// Для сохранения формата множественного запроса при запросе статуса
-    /// одного сообщения укажите запятую после идентификатора сообщения.
     /// </param>
-    /// <param name="all">
-    /// 0 – (по умолчанию) получить статус сообщения в обычном формате.
-    /// 1 – получить полную информацию об отправленном сообщении.
-    /// 2 – добавить в информацию о сообщении данные о стране, операторе и регионе абонента.
-    /// </param>
-    /// <param name="delete">
-    /// 1 – удалить ранее отправленное сообщение. Используется совместно с параметрами phone и id.
-    /// </param>
-    ValueTask<Status.SmsResponse> GetSmsStatus(
-        string phone,
-        int id,
-        byte? all = default,
-        byte? delete = default);
+    ValueTask<Status.SmsResponse> GetSmsStatus(string phone, int id);
 
     // Статус проверки доступности номера
-    ValueTask<Status.HlrResponse> GetHlrStatus(
-        string phone,
-        int id,
-        byte? all = default,
-        byte? delete = default);
-
+    ValueTask<Status.HlrResponse> GetHlrStatus(string phone, int id);
+    
+    /// <summary>
+    /// Удаление сообщения
+    /// </summary>
+    /// <param name="phone">Номер телефона</param>
+    /// <param name="id">Идентификатор сообщения</param>
+    ValueTask<Status.DeleteResponse> DeleteSms(string phone, int id);
+    
     // Получение истории отправленных сообщений
     ValueTask<History.Response> GetHistory(HistoryOptions options);
 

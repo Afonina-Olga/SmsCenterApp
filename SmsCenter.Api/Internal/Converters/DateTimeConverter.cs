@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace SmsCenter.Api.Internal.Converters;
 
-internal class DateTimeConverter : JsonConverter<DateTime>
+public class DateTimeConverter : JsonConverter<DateTime>
 {
     private DateTimeConverter() { }
     public static readonly DateTimeConverter Instance = new();

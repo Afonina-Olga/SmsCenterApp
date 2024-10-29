@@ -448,7 +448,7 @@ public static class SmsCenter
             /// Для сохранения формата множественного запроса при запросе статуса одного сообщения укажите запятую после идентификатора сообщения.
             /// </remarks>
             [JsonPropertyName("id")]
-            public int Id { get; set; }
+            public int Id { get; set; } = default!;
 
             /// <summary>
             /// 0 – (по умолчанию) получить статус сообщения в обычном формате.
@@ -557,6 +557,12 @@ public static class SmsCenter
             /// </summary>
             [JsonPropertyName("region")]
             public string? Region { get; set; }
+        }
+
+        public record DeleteResponse : ResponseBase
+        {
+            [JsonPropertyName("result")]
+            public string Result { get; set; } = default!;
         }
 
         public record SmsResponse : Response

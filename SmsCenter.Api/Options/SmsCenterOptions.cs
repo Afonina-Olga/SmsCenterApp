@@ -49,4 +49,9 @@ internal sealed class SmsCenterOptions
     /// Отправитель email 
     /// </summary>
     public string EmailSender { get; private set; } = default!;
+    
+    /// <summary>
+    /// Задержка между последовательными запросами
+    /// </summary>
+    public int DelayBetweenRequests { get; private set; } 
 }

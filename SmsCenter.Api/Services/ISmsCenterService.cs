@@ -51,27 +51,18 @@ public interface ISmsCenterService
     /// Проверка телефона на доступность
     /// </summary>
     /// <param name="phone">Номер телефона</param>
-    /// <returns></returns>
-    ValueTask<Sms.Response> SendHlr(string phone);
+    ValueTask<bool> SendHlr(string phone);
 
-    /// <summary>
-    /// Проверка телефона на доступность
-    /// </summary>
-    /// <param name="phones"></param>
-    /// <returns></returns>
-    ValueTask<Sms.Response> SendHlr(string[] phones);
-    
     /// <summary>
     /// Ping
     /// </summary>
     /// <param name="phone">Номер телефона</param>
-    /// <returns></returns>
-    ValueTask<Sms.Response> SendPing(string phone);
+    ValueTask<bool> SendPing(string phone);
 
     /// <summary>
-    /// Ping
+    /// Удаление сообщения
     /// </summary>
-    /// <param name="phones"></param>
-    /// <returns></returns>
-    ValueTask<Sms.Response> SendPing(string[] phones);
+    /// <param name="phone">Номер телефона</param>
+    /// <param name="id">Идентификатор сообщения</param>
+    ValueTask<bool> DeleteSms(string phone, int id);
 }

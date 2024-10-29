@@ -1,11 +1,15 @@
-﻿using SmsCenter.Api.Internal.Exceptions;
+﻿using Microsoft.Extensions.Options;
+using SmsCenter.Api.Internal.Exceptions;
 using SmsCenter.Api.Internal.Extensions;
+using SmsCenter.Api.Options;
 using SmsCenter.Api.Providers;
 using static SmsCenter.Api.Models.SmsCenter;
 
 namespace SmsCenter.Api.Services;
 
-internal sealed class SmsCenterService(ISmsCenterProvider provider) : ISmsCenterService
+internal sealed class SmsCenterService(
+    ISmsCenterProvider provider,
+    IOptions<SmsCenterOptions> smsCenterOptions) : ISmsCenterService
 {
     #region Стоимость рассылки
 
@@ -123,47 +127,38 @@ internal sealed class SmsCenterService(ISmsCenterProvider provider) : ISmsCenter
 
     #region Проверка доступности номера
 
-    public async ValueTask<bool> SendHlrRequest(string phone)
+    public async ValueTask<bool> SendHlr(string phone)
     {
         var result = await provider.SendHlr(phone);
-
-        throw new NotImplementedException();
-        // if (result.Id is false) return false;
-        // var status = await provider.GetHlrStatus(phone, result.Id.Value);
-        // return status is { Status: 1, ErrorCode: 0 };
+        ThrowErrorIfExists(result.Error?.Message);
+        await Task.Delay(smsCenterOptions.Value.DelayBetweenRequests); // Нужна небольшая задержка между запросами
+        var status = await provider.GetHlrStatus(phone, result.Id);
+        ThrowErrorIfExists(status.Error?.Message);
+        return status is { Status: 1, ErrorCode: 200 };
     }
 
-    public async ValueTask<bool> Ping(string phone)
+    public async ValueTask<bool> SendPing(string phone)
     {
         var result = await provider.SendPing(phone);
-        throw new NotImplementedException();
-
-        // if (result.Id.HasValue is false) return false;
-        // var status = await provider.GetHlrStatus(phone, result.Id.Value);
-        // return status is { Status: 1, ErrorCode: 0 };
+        ThrowErrorIfExists(result.Error?.Message);
+        await Task.Delay(smsCenterOptions.Value.DelayBetweenRequests); // Нужна небольшая задержка между запросами
+        var status = await provider.GetHlrStatus(phone, result.Id);
+        ThrowErrorIfExists(status.Error?.Message);
+        return status is { Status: 1, ErrorCode: 200 };
     }
 
-    public ValueTask<Sms.Response> SendHlr(string phone)
-    {
-        throw new NotImplementedException();
-    }
+   #endregion
 
-    public ValueTask<Sms.Response> SendHlr(string[] phones)
-    {
-        throw new NotImplementedException();
-    }
+   #region Удаление сообщения
 
-    public ValueTask<Sms.Response> SendPing(string phone)
-    {
-        throw new NotImplementedException();
-    }
+   public async ValueTask<bool> DeleteSms(string phone, int id)
+   {
+       var result = await provider.DeleteSms(phone, id);
+       ThrowErrorIfExists(result.Error?.Message);
+       return result.Result is "OK";
+   }
 
-    public ValueTask<Sms.Response> SendPing(string[] phones)
-    {
-        throw new NotImplementedException();
-    }
-
-    #endregion
+   #endregion
 
     #region Private methods
 
