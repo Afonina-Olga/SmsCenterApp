@@ -9,7 +9,7 @@ public class NavigationService : INavigationService
 
     public void Navigate(ViewModelBase viewModel)
     {
-        CurrentViewModel.Dispose();
+        CurrentViewModel?.Dispose();
         CurrentViewModel = viewModel;
         StateChanged?.Invoke();
     }

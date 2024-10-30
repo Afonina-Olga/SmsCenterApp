@@ -9,7 +9,7 @@
         Height="600"
         Width="800"
         Icon="/Shared/Resources/favicon.png">
-    <Window.Resources>
+   <Window.Resources>
         <Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}" TargetType="TextBox">
             <Setter Property="FontWeight" Value="Thin" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -94,8 +94,7 @@
                                       materialDesign:ElevationAssist.Elevation="Dp4"
                                       DockPanel.Dock="Top"
                                       Mode="PrimaryMid"
-                                      Background="{StaticResource PrimaryHueDarkBrush}"
-                                      Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                      Background="{StaticResource PrimaryHueDarkBrush}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="40" />
@@ -115,6 +114,7 @@
                     <TextBlock Grid.Column="1" Margin="15 0 0 0"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
+                               AutomationProperties.Name="Sms Center Demo"
                                FontSize="30"
                                FontWeight="Bold"
                                Text="Sms Center Demo" />
@@ -125,8 +125,9 @@
                                  materialDesign:ElevationAssist.Elevation="Dp4"
                                  UniformCornerRadius="0"
                                  Background="{StaticResource SecondaryBrush}"
-                                 Width="200">
-                <ContentControl Content="{Binding CurrentMenu}" />
+                                 Width="250">
+                <ContentControl Content="{Binding Menu}" />
+                
             </materialDesign:Card>
             <ScrollViewer Background="#EEEEEE"
                           DockPanel.Dock="Right"

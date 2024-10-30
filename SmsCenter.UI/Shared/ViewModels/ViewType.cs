@@ -1,9 +1,6 @@
-﻿namespace SmsCenter.UI.Shared.ViewModels
+﻿namespace SmsCenter.UI.Shared.ViewModels;
+
+public enum ViewType
 {
-    public enum ViewType
-    {
-        SendSms,
-        StatusSms,
-        Dashboard
-    }
+    SendSms
 }

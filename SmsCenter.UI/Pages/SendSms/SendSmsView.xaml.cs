@@ -2,9 +2,9 @@
 
 namespace SmsCenter.UI.Pages.SendSms;
 
-public partial class SendSms : UserControl
+public partial class SendSmsView : UserControl
 {
-    public SendSms()
+    public SendSmsView()
     {
         InitializeComponent();
     }
