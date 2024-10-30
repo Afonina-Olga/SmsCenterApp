@@ -40,6 +40,11 @@ internal interface ISmsCenterProvider
     /// <returns></returns>
     ValueTask<Sms.Response> GetSmsSendingCost(string phoneAndMessageList);
 
+    /// <summary>
+    /// Отправка hlr заголовка для проверки доступности номера
+    /// </summary>
+    /// <param name="phone"></param>
+    /// <returns></returns>
     ValueTask<Sms.Response> SendHlr(string phone);
 
     ValueTask<Sms.Response> SendPing(string phone);

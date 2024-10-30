@@ -13,7 +13,6 @@ var service = app.Services.GetRequiredService<ISmsCenterService>();
 
 const byte lineWidth = 100;
 const string phone = "+79265718860";
-const string unrealPhone = "+79261234567";
 var phones = new[] { "+79265718860", "+79261234657", "+79251547412" };
 const string message = "Привет!";
 const string longMessage =
@@ -23,10 +22,10 @@ PrintHeader("Получить стоимость рассылки");
 
 #region Стоимость рассылки
 
+PrintSubHeader("Стоимость отправки одного и того же сообщения на несколько номеров телефонов");
 try
 {
     var result = await service.GetCost(phones, message);
-    PrintSubHeader("Стоимость отправки одного и того же сообщения на несколько номеров телефонов");
     PrintRequestFromArray(phones, message);
     Console.WriteLine();
     PrintResponse(result);
@@ -36,10 +35,10 @@ catch (Exception e)
     PrintErrorMessage(e.Message);
 }
 
+PrintSubHeader($"Стоимость отправки сообщения \"{message}\" на номер {phone}");
 try
 {
     var result = await service.GetCost(phone, message);
-    PrintSubHeader($"Стоимость отправки сообщения \"{message}\" на номер {phone}");
     PrintRequest(phone, message);
     Console.WriteLine();
     PrintResponse(result);
@@ -49,10 +48,10 @@ catch (Exception e)
     PrintErrorMessage(e.Message);
 }
 
+PrintSubHeader($"Стоимость отправки длинного сообщения на номер {phone}");
 try
 {
     var result = await service.GetCost(phone, longMessage);
-    PrintSubHeader($"Стоимость отправки длинного сообщения на номер {phone}");
     PrintRequest(phone, longMessage);
     Console.WriteLine();
     PrintResponse(result);
@@ -62,6 +61,7 @@ catch (Exception e)
     PrintErrorMessage(e.Message);
 }
 
+PrintSubHeader($"Стоимость отправки различных сообщений на различные номера");
 try
 {
     var list = new Dictionary<string, string>()
@@ -72,7 +72,6 @@ try
         { "+79262638751", message }
     };
     var result = await service.GetCost(list);
-    PrintSubHeader($"Стоимость отправки различных сообщений на различные номера");
     PrintRequestFromDictionary(list);
     Console.WriteLine();
     PrintResponse(result);
@@ -87,10 +86,10 @@ catch (Exception e)
 
 #region Баланс
 
+PrintHeader("Получение баланса");
 try
 {
     var result = await service.GetBalance();
-    PrintSubHeader("Получение баланса");
     Console.WriteLine($"Остаток: {result} руб.");
 }
 catch (Exception e)
@@ -102,10 +101,11 @@ catch (Exception e)
 
 #region Отправка смс
 
+PrintHeader("Отправка смс");
+PrintSubHeader("Отправка одного и того же сообщения на несколько номеров телефонов");
 try
 {
     var result = await service.SendSms(phones, message);
-    PrintSubHeader("Отправка одного и того же сообщения на несколько номеров телефонов");
     PrintRequestFromArray(phones, message);
     Console.WriteLine();
     PrintResponse(result);
@@ -115,10 +115,10 @@ catch (Exception e)
     PrintErrorMessage(e.Message);
 }
 
+PrintSubHeader($"Отправка сообщения \"{message}\" на номер {phone}");
 try
 {
     var result = await service.SendSms(phone, message);
-    PrintSubHeader($"Отправка сообщения \"{message}\" на номер {phone}");
     PrintRequest(phone, message);
     Console.WriteLine();
     PrintResponse(result);
@@ -128,10 +128,10 @@ catch (Exception e)
     PrintErrorMessage(e.Message);
 }
 
+PrintSubHeader($"Отправка длинного сообщения на номер {phone}");
 try
 {
     var result = await service.SendSms(phone, longMessage);
-    PrintSubHeader($"Отправка длинного сообщения на номер {phone}");
     PrintRequest(phone, longMessage);
     Console.WriteLine();
     PrintResponse(result);
@@ -141,6 +141,7 @@ catch (Exception e)
     PrintErrorMessage(e.Message);
 }
 
+PrintSubHeader($"Отправка различных сообщений на различные номера");
 try
 {
     var list = new Dictionary<string, string>()
@@ -151,7 +152,6 @@ try
         { "+79262638751", message }
     };
     var result = await service.SendSms(list);
-    PrintSubHeader($"Отправка различных сообщений на различные номера");
     PrintRequestFromDictionary(list);
     Console.WriteLine();
     PrintResponse(result);
@@ -166,10 +166,11 @@ catch (Exception e)
 
 #region Проверка доступности номера
 
+PrintHeader("Проверка номера на доступность");
+PrintSubHeader("HLR");
 try
 {
     var result = await service.SendHlr(phone);
-    PrintSubHeader("Проверка номера на доступность (HLR)");
     PrintResponseFromBool(result, "Абонент доступен", "Абонент вне зоны доступа");
 }
 catch (Exception e)
@@ -177,10 +178,10 @@ catch (Exception e)
     PrintErrorMessage(e.Message);
 }
 
+PrintSubHeader("Ping");
 try
 {
     var result = await service.SendPing(phone);
-    PrintSubHeader("Проверка номера на доступность (Ping)");
     PrintResponseFromBool(result, "Абонент доступен", "Абонент вне зоны доступа");
 }
 catch (Exception e)
@@ -192,15 +193,16 @@ catch (Exception e)
 
 #region Удаление смс
 
+PrintHeader("Удаление сообщения");
+PrintSubHeader("Удаление одного сообщения");
 try
 {
-    Console.WriteLine("Подождать минуту...");
+    Console.WriteLine("Подождать минуту для повторной отправки сообщения");
     await Task.Delay(65000);
     var sms = await service.SendSms(phone, message);
     Console.WriteLine("Небольшая задержка между запросами...");
     await Task.Delay(5000);
     var result = await service.DeleteSms(phone, sms.Id);
-    PrintSubHeader("Удаление одного сообщения");
     PrintResponseFromBool(result, "Сообщение удалено", "Сообщение не удалено");
 }
 catch (Exception e)
