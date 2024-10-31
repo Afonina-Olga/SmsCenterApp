@@ -6,7 +6,18 @@
              xmlns:local="clr-namespace:SmsCenter.UI.Pages.SendSms"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TextBlock Text="Send sms"></TextBlock>
+    <Grid Margin="32 24" VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   VerticalAlignment="Center"
+                   Style="{StaticResource BaseHeaderStyle}"
+                   Text="Отправить sms-сообщение" />
+        <Rectangle Grid.Row="1" Margin="-5 5 0 0" HorizontalAlignment="Left" Height="5" Width="50"
+                   Fill="{StaticResource Primary2Brush}">
+        </Rectangle>
     </Grid>
 </UserControl>

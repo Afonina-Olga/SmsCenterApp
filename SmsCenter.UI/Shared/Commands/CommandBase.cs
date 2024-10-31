@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 
 namespace SmsCenter.UI.Shared.Commands;
 
@@ -30,15 +31,22 @@ public abstract class CommandBaseAsync : ICommand
         }
     }
 
-    public event EventHandler CanExecuteChanged;
+    public event EventHandler? CanExecuteChanged;
 
     public virtual bool CanExecute(object? parameter) => !IsExecuting;
 
     public async void Execute(object? parameter)
     {
-        IsExecuting = true;
-        if (parameter != null) await ExecuteAsync(parameter);
-        IsExecuting = false;
+        try
+        {
+            IsExecuting = true;
+            await ExecuteAsync(parameter!);
+            IsExecuting = false;
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show("Command base async error: " + e.Message);
+        }
     }
 
     protected abstract Task ExecuteAsync(object parameter);

@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:sendSms="clr-namespace:SmsCenter.UI.Pages.SendSms"
              xmlns:getCost="clr-namespace:SmsCenter.UI.Pages.GetCost"
-             xmlns:controls="clr-namespace:SmsCenter.UI.Shared.Controls">
+             xmlns:controls="clr-namespace:SmsCenter.UI.Shared.Controls"
+             xmlns:dialog="clr-namespace:SmsCenter.UI.Features.Dialog"
+             xmlns:simpleDialog="clr-namespace:SmsCenter.UI.Features.SimpleDialog">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -33,9 +35,21 @@
             <DataTemplate DataType="{x:Type controls:MenuViewModel}">
                 <controls:MenuView />
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type getCost:GetCostViewModel}">
                 <getCost:GetCostView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialog:DialogViewModel}">
+                <dialog:DialogView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type simpleDialog:SimpleDialogViewModel}">
+                <simpleDialog:SimpleDialogView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type getCost:AddPhoneNumberViewModel}">
+                <getCost:AddPhoneView />
             </DataTemplate>
 
         </ResourceDictionary>

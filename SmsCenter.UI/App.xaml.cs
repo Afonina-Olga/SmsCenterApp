@@ -33,6 +33,7 @@ namespace SmsCenter.UI
                 services.AddTransient<SendSmsViewModel>();
                 services.AddTransient<GetCostViewModel>();
                 services.AddTransient<MenuItemViewModel>();
+                services.AddTransient<AddPhoneNumberViewModel>();
                 services.AddTransient<MenuViewModel>();
 
                 services.AddSingleton(s =>
@@ -40,7 +41,7 @@ namespace SmsCenter.UI
 
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddSingleton<IEventNotificationService, EventNotificationService>();
-
+                services.AddSingleton<IDialogService, DialogService>();
             });
             return hostBuilder;
         }

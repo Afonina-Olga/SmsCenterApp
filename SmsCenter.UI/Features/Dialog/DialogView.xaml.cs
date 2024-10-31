@@ -2,9 +2,9 @@
 
 namespace SmsCenter.UI.Features.Dialog;
 
-public partial class Dialog : UserControl
+public partial class DialogView : UserControl
 {
-    public Dialog()
+    public DialogView()
     {
         InitializeComponent();
     }

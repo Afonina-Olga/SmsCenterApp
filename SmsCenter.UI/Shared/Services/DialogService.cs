@@ -7,7 +7,8 @@ namespace SmsCenter.UI.Shared.Services;
 
 public interface IDialogService
 {
-    Task Show<TModel>(TModel content, string identifier = "RootDialogHost") where TModel : ViewModelBase;
+    Task Show<TModel>(TModel content, string identifier = "RootDialogHost") 
+        where TModel : ViewModelBase;
     void Close(string identifier = "RootDialogHost");
 }
 
