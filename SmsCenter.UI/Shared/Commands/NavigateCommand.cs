@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SmsCenter.UI.Pages.GetCost;
 using SmsCenter.UI.Pages.SendSms;
 using SmsCenter.UI.Shared.Services;
 using SmsCenter.UI.Shared.ViewModels;
@@ -15,6 +16,7 @@ public class NavigateCommand(INavigationService service) : CommandBase
         ViewModelBase viewModel = viewType switch
         {
             ViewType.SendSms => App.Current.Services.GetRequiredService<SendSmsViewModel>(),
+            ViewType.GetCost => App.Current.Services.GetRequiredService<GetCostViewModel>(),
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel))
         };
                 

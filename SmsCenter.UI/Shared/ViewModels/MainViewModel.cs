@@ -21,13 +21,13 @@ namespace SmsCenter.UI.Shared.ViewModels
         public MainViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
-
             _navigationService.StateChanged += OnNavigatorStateChanged;
-            NavigateCommand = new NavigateCommand(navigationService);
-            NavigateCommand.Execute(ViewType.SendSms);
-            var menu = App.Current.Services.GetRequiredService<MenuViewModel>();
 
-            menu.MenuItems.Add(CreateItem(1, true, "Получить стоимость", ViewType.SendSms, PackIconKind.CurrencyRub));
+            NavigateCommand = new NavigateCommand(navigationService);
+            NavigateCommand.Execute(ViewType.GetCost);
+            
+            var menu = App.Current.Services.GetRequiredService<MenuViewModel>();
+            menu.MenuItems.Add(CreateItem(1, true, "Получить стоимость", ViewType.GetCost, PackIconKind.CurrencyRub));
             menu.MenuItems.Add(CreateItem(2, false, "Отправить смс", ViewType.SendSms, PackIconKind.MessageAlert));
             menu.MenuItems.Add(CreateItem(3, false, "Узнать баланс", ViewType.SendSms, PackIconKind.Wallet));
             menu.MenuItems.Add(CreateItem(4, false, "Статистика", ViewType.SendSms, PackIconKind.ChartPie));

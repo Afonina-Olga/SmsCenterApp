@@ -2,5 +2,6 @@
 
 public enum ViewType
 {
-    SendSms
+    SendSms,
+    GetCost
 }

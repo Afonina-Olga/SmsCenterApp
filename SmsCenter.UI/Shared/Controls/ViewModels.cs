@@ -21,9 +21,10 @@ namespace SmsCenter.UI.Shared.Controls
                 OnPropertyChanged();
             }
         }
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
 
-        public MenuItemViewModel(INavigationService navigationService,
+        public MenuItemViewModel(
+            INavigationService navigationService,
             IEventNotificationService eventNotificationService)
         {
             MenuCommand = new MenuCommand(this, navigationService, eventNotificationService);

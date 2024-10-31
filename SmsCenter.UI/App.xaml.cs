@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmsCenter.UI.Pages.GetCost;
 using SmsCenter.UI.Pages.SendSms;
 using SmsCenter.UI.Shared.Controls;
 using SmsCenter.UI.Shared.Services;
@@ -30,6 +31,7 @@ namespace SmsCenter.UI
             {
                 services.AddTransient<MainViewModel>();
                 services.AddTransient<SendSmsViewModel>();
+                services.AddTransient<GetCostViewModel>();
                 services.AddTransient<MenuItemViewModel>();
                 services.AddTransient<MenuViewModel>();
 
