@@ -6,29 +6,175 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Margin="32 24" VerticalAlignment="Top">
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0"
-                   VerticalAlignment="Center"
+    <StackPanel Margin="32 24">
+        <TextBlock VerticalAlignment="Center"
                    Style="{StaticResource BaseHeaderStyle}"
                    Text="Получить стоимость рассылки" />
-        <Rectangle Grid.Row="1" Margin="-5 5 0 0" HorizontalAlignment="Left" Height="5" Width="50"
+        <Rectangle Margin="-5 5 0 0" HorizontalAlignment="Left" Height="5" Width="50"
                    Fill="{StaticResource Primary2Brush}">
         </Rectangle>
-        <Button Grid.Row="2" Margin="0 24 0 0"
-                HorizontalAlignment="Left"
-                materialDesign:ElevationAssist.Elevation="Dp1"
-                Style="{StaticResource MaterialDesignRaisedAccentButton}"
-                Width="250"
-                Command="{Binding OpenDialogCommand}">
-            <StackPanel Orientation="Horizontal">
-                <materialDesign:PackIcon Kind="Add" VerticalAlignment="Center" />
-                <TextBlock Text="Добавить номер телефона" />
-            </StackPanel>
-        </Button>
-    </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" VerticalAlignment="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBox Grid.Row="0"
+                         HorizontalAlignment="Left"
+                         Margin="0 16 0 0"
+                         materialDesign:HintAssist.Hint="Сообщение"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         FontSize="14"
+                         Width="220"
+                         Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}" />
+                <ScrollViewer Grid.Row="1"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <ItemsControl MinWidth="220"
+                                  HorizontalAlignment="Left"
+                                  Margin="0 8 0 0"
+                                  ItemsSource="{Binding PhoneNumbers}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    x:Name="Border"
+                                    Padding="8"
+                                    BorderThickness="0 0 0 1"
+                                    BorderBrush="{DynamicResource MaterialDesignDivider}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="40" />
+                                            <ColumnDefinition Width="40" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                                   VerticalAlignment="Center"
+                                                   Style="{StaticResource BaseTextStyle}"
+                                                   Text="{Binding Text}" />
+                                        <Button
+                                            Grid.Column="2"
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            HorizontalAlignment="Right"
+                                            Height="30"
+                                            Width="30"
+                                            Background="LightGray"
+                                            Margin="10 0 0 0"
+                                            ToolTip="Удалить номер телефона"
+                                            Command="{Binding DeleteCommand}">
+                                            <materialDesign:PackIcon
+                                                Height="15"
+                                                Width="15"
+                                                Foreground="Gray"
+                                                Kind="DeleteOutline" />
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <Button Grid.Row="2" Margin="0 24 0 0"
+                        HorizontalAlignment="Left"
+                        materialDesign:ElevationAssist.Elevation="Dp1"
+                        Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                        Width="220"
+                        Command="{Binding OpenDialogCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Add" VerticalAlignment="Center" />
+                        <TextBlock Text="Добавить номер" />
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="3" Margin="0 16 0 0"
+                        HorizontalAlignment="Left"
+                        materialDesign:ElevationAssist.Elevation="Dp1"
+                        Style="{StaticResource MaterialDesignOutlinedButton}"
+                        Width="220"
+                        Command="{Binding SendRequestCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Send" VerticalAlignment="Center" />
+                        <TextBlock Margin="4 0 0 0" Text="Отправить запрос" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+            <DataGrid Grid.Column="1"
+                      Margin="0 20 0 0"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      IsSelected="false"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserSortColumns="False"
+                      HeadersVisibility="All"
+                      CanUserResizeColumns="True"
+                      CanUserResizeRows="False"
+                      ItemsSource="{Binding Managers, UpdateSourceTrigger=PropertyChanged}">
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Focusable" Value="False" />
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Телефон" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{Binding PhoneNumber}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="*"
+                                            Header="MccMnc">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding MccMnc }" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Стоимость" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{Binding Cost, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="*"
+                                            Header="Статус">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Status }" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="*"
+                                            Header="Код ошибки">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Error }" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <TextBox
+            Margin="0 16 0 0"
+            IsReadOnly="True"
+            Height="400"
+            VerticalAlignment="Stretch"
+            AcceptsReturn="True"
+            materialDesign:TextFieldAssist.HasClearButton="False"
+            Text="Multiline. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. The quick brown fox jumps over the lazy dog. War and peace. Keep going. Go on. For how long? Not long. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto" />
+    </StackPanel>
 </UserControl>

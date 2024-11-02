@@ -9,15 +9,15 @@ public class ValidationViewModel : ViewModelBase, INotifyDataErrorInfo
 {
     private readonly Dictionary<string, List<ValidationResult>> _errors = new();
 
-    public bool HasErrors => _errors.Any();
+    public bool HasErrors => _errors.Count is not 0;
 
     public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
     public IEnumerable GetErrors(string? propertyName)
     {
-        return !string.IsNullOrEmpty(propertyName)
-            ? _errors.GetValueOrDefault(propertyName, null)
-            : new List<ValidationResult>();
+        return (!string.IsNullOrEmpty(propertyName)
+            ? _errors!.GetValueOrDefault(propertyName, null)
+            : [])!;
     }
 
     public bool FindErrors(string propertyName) => _errors.ContainsKey(propertyName);

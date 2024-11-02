@@ -22,4 +22,8 @@
       <PackageReference Include="Notification.Wpf" Version="8.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SmsCenter.Api\SmsCenter.Api.csproj" />
+    </ItemGroup>
+
 </Project>
